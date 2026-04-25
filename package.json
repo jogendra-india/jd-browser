@@ -1,0 +1,57 @@
+{
+  "name": "jd-browser",
+  "displayName": "JD Browser",
+  "description": "A VS Code Activity Bar browser view for local and external web pages.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.116.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:myBrowser.browserView",
+    "onCommand:myBrowser.open"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "myBrowser.open",
+        "title": "Open Browser",
+        "category": "JD Browser"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "myBrowser",
+          "title": "JD Browser",
+          "icon": "media/browser.svg"
+        }
+      ]
+    },
+    "views": {
+      "myBrowser": [
+        {
+          "id": "myBrowser.browserView",
+          "name": "JD Browser",
+          "type": "webview"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.116.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "eslint": "^9.39.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
