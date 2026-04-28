@@ -325,6 +325,53 @@ class BrowserViewProvider {
 				updateButtons();
 			};
 
+			input.addEventListener('keydown', async (e) => {
+				if ((e.metaKey || e.ctrlKey)) {
+					if (e.key === 'v') {
+						try {
+							const text = await navigator.clipboard.readText();
+							if (text) {
+								const start = input.selectionStart;
+								const end = input.selectionEnd;
+								input.value = input.value.slice(0, start) + text + input.value.slice(end);
+								input.selectionStart = input.selectionEnd = start + text.length;
+								e.preventDefault();
+							}
+						} catch (err) {
+							// fallback
+							document.execCommand('paste');
+						}
+					} else if (e.key === 'c') {
+						const text = input.value.slice(input.selectionStart, input.selectionEnd);
+						if (text) {
+							try {
+								await navigator.clipboard.writeText(text);
+								e.preventDefault();
+							} catch (err) {
+								document.execCommand('copy');
+							}
+						}
+					} else if (e.key === 'x') {
+						const text = input.value.slice(input.selectionStart, input.selectionEnd);
+						if (text) {
+							try {
+								await navigator.clipboard.writeText(text);
+								const start = input.selectionStart;
+								const end = input.selectionEnd;
+								input.value = input.value.slice(0, start) + input.value.slice(end);
+								input.selectionStart = input.selectionEnd = start;
+								e.preventDefault();
+							} catch (err) {
+								document.execCommand('cut');
+							}
+						}
+					} else if (e.key === 'a') {
+						input.select();
+						e.preventDefault();
+					}
+				}
+			});
+
 			form.addEventListener('submit', (event) => {
 				event.preventDefault();
 				navigate(input.value);
