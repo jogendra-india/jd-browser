@@ -53,6 +53,10 @@ class BrowserViewProvider {
 			} else if (message.command === 'requestState') {
 				const state = this.context.globalState.get(STATE_KEY) || null;
 				webviewView.webview.postMessage({ command: 'restoreState', state });
+			} else if (message.command === 'readClipboard') {
+				vscode.env.clipboard.readText().then((text) => {
+					webviewView.webview.postMessage({ command: 'clipboardText', text });
+				});
 			}
 		});
 	}
@@ -667,6 +671,23 @@ class BrowserViewProvider {
 						}
 					}
 					newTab(homeUrl);
+				} else if (m.command === 'clipboardText') {
+					if (document.activeElement === input && typeof m.text === 'string') {
+						const start = input.selectionStart;
+						const end = input.selectionEnd;
+						const val = input.value;
+						input.value = val.slice(0, start) + m.text + val.slice(end);
+						input.selectionStart = input.selectionEnd = start + m.text.length;
+					}
+				}
+			});
+
+			window.addEventListener('keydown', (e) => {
+				if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'v') {
+					if (document.activeElement === input) {
+						e.preventDefault();
+						vscode.postMessage({ command: 'readClipboard' });
+					}
 				}
 			});
 
