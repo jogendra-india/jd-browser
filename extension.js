@@ -57,6 +57,8 @@ class BrowserViewProvider {
 				vscode.env.clipboard.readText().then((text) => {
 					webviewView.webview.postMessage({ command: 'clipboardText', text });
 				});
+			} else if (message.command === 'writeClipboard') {
+				vscode.env.clipboard.writeText(message.text);
 			}
 		});
 	}
@@ -683,10 +685,28 @@ class BrowserViewProvider {
 			});
 
 			window.addEventListener('keydown', (e) => {
-				if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'v') {
-					if (document.activeElement === input) {
-						e.preventDefault();
-						vscode.postMessage({ command: 'readClipboard' });
+				if (e.metaKey || e.ctrlKey) {
+					const key = e.key.toLowerCase();
+					if (key === 'v') {
+						if (document.activeElement === input) {
+							e.preventDefault();
+							vscode.postMessage({ command: 'readClipboard' });
+						}
+					} else if (key === 'c' || key === 'x') {
+						if (document.activeElement === input) {
+							e.preventDefault();
+							const start = input.selectionStart;
+							const end = input.selectionEnd;
+							const selectedText = input.value.substring(start, end);
+							if (selectedText) {
+								vscode.postMessage({ command: 'writeClipboard', text: selectedText });
+								if (key === 'x') {
+									const val = input.value;
+									input.value = val.slice(0, start) + val.slice(end);
+									input.selectionStart = input.selectionEnd = start;
+								}
+							}
+						}
 					}
 				}
 			});
