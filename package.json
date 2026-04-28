@@ -9,7 +9,7 @@
     "url": "https://github.com/jogendra-india/jd-browser.git"
   },
   "engines": {
-    "vscode": "^1.116.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Other"
