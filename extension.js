@@ -209,7 +209,7 @@ class BrowserViewProvider {
 	</form>
 	<div class="status" id="status">Ready</div>
 	<div class="frame-wrap">
-		<iframe id="browserFrame" title="Browser preview" sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"></iframe>
+		<iframe id="browserFrame" title="Browser preview" sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts" allow="clipboard-read; clipboard-write"></iframe>
 		<div class="embed-message" id="embedMessage">
 			<div class="message-title">This site cannot be shown inside JD Browser</div>
 			<div class="message-copy" id="embedMessageCopy"></div>
